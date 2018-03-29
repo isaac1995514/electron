@@ -651,7 +651,6 @@ describe('webContents module', () => {
       const events = [
         { name: 'did-start-loading', url: `${server.url}/200` },
         { name: 'did-get-redirect-request', url: `${server.url}/301` },
-        { name: 'did-get-response-details', url: `${server.url}/200` },
         { name: 'dom-ready', url: `${server.url}/200` },
         { name: 'did-stop-loading', url: `${server.url}/200` },
         { name: 'did-finish-load', url: `${server.url}/200` },

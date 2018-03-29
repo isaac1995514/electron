@@ -844,19 +844,6 @@ void WebContents::DidStopLoading() {
   Emit("did-stop-loading");
 }
 
-void WebContents::DidGetResourceResponseStart(
-    const content::ResourceRequestDetails& details) {
-  Emit("did-get-response-details",
-       details.socket_address.IsEmpty(),
-       details.url,
-       details.original_url,
-       details.http_response_code,
-       details.method,
-       details.referrer,
-       details.headers.get(),
-       ResourceTypeToString(details.resource_type));
-}
-
 void WebContents::DidGetRedirectForResourceRequest(
     const content::ResourceRedirectDetails& details) {
   Emit("did-get-redirect-request",
