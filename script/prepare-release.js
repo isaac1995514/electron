@@ -5,7 +5,7 @@ const args = require('minimist')(process.argv.slice(2), {
   boolean: ['automaticRelease', 'notesOnly', 'stable']
 })
 const assert = require('assert')
-const ciReleaseBuild = require('./ci-release-build')
+// const ciReleaseBuild = require('./ci-release-build')
 const { execSync } = require('child_process')
 const fail = '\u2717'.red
 const { GitProcess } = require('dugite')
@@ -177,8 +177,8 @@ async function createRelease (branchToTarget, isBeta) {
   console.log(`${pass} Draft release for ${newVersion} has been created.`)
 }
 
-async function pushRelease () {
-  let pushDetails = await GitProcess.exec(['push', 'origin', 'HEAD', '--follow-tags'], gitDir)
+async function pushRelease (branch) {
+  let pushDetails = await GitProcess.exec(['push', 'origin', branch, '--follow-tags'], gitDir)
   if (pushDetails.exitCode === 0) {
     console.log(`${pass} Successfully pushed the release.  Wait for ` +
       `release builds to finish before running "npm run release".`)
@@ -189,12 +189,12 @@ async function pushRelease () {
   }
 }
 
-async function runReleaseBuilds (branch) {
+/* async function runReleaseBuilds (branch) {
   await ciReleaseBuild(branch, {
     ghRelease: true,
     automaticRelease: args.automaticRelease
   })
-}
+} */
 
 async function tagRelease (version) {
   console.log(`Tagging release ${version}.`)
@@ -255,8 +255,8 @@ async function prepareRelease (isBeta, notesOnly) {
   } else {
     await verifyNewVersion()
     await createRelease(currentBranch, isBeta)
-    await pushRelease()
-    await runReleaseBuilds(currentBranch)
+    await pushRelease(currentBranch)
+    // await runReleaseBuilds(currentBranch)
   }
 }
 
