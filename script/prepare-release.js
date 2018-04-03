@@ -177,8 +177,12 @@ async function createRelease (branchToTarget, isBeta) {
   console.log(`${pass} Draft release for ${newVersion} has been created.`)
 }
 
-async function pushRelease (branch) {
-  let pushDetails = await GitProcess.exec(['push', 'origin', branch, '--follow-tags'], gitDir)
+async function pushRelease () {
+  let pushArgs = ['push', 'origin', '--follow-tags']
+  if (!args.automaticRelease) {
+    pushArgs.push('HEAD')
+  }
+  let pushDetails = await GitProcess.exec(pushArgs, gitDir)
   if (pushDetails.exitCode === 0) {
     console.log(`${pass} Successfully pushed the release.  Wait for ` +
       `release builds to finish before running "npm run release".`)
@@ -255,7 +259,7 @@ async function prepareRelease (isBeta, notesOnly) {
   } else {
     await verifyNewVersion()
     await createRelease(currentBranch, isBeta)
-    await pushRelease(currentBranch)
+    await pushRelease()
     // await runReleaseBuilds(currentBranch)
   }
 }
